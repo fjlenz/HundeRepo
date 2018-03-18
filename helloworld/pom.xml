@@ -4,26 +4,67 @@
   <artifactId>helloworld</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   
-<parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.8.RELEASE</version>
-</parent>
+  
+	<parent>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-parent</artifactId>
+	    <version>1.5.8.RELEASE</version>
+	</parent>
+	
+	<dependencies>
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-web</artifactId>
+	    </dependency>
+	    <dependency>
+		    	<groupId>org.springframework.boot</groupId>
+	    		<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+	</dependencies>
+	
+	<properties>
+	    <java.version>1.8</java.version>
+	    <docker.image.prefix>springio</docker.image.prefix>
+	</properties>
 
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-	    	<groupId>org.springframework.boot</groupId>
-    		<artifactId>spring-boot-starter-actuator</artifactId>
-	</dependency>
-</dependencies>
 
-<properties>
-    <java.version>1.8</java.version>
-</properties>
+	
+	<build>
+	    <plugins>
+	        <plugin>
+	    			<groupId>org.springframework.boot</groupId>
+		        <artifactId>spring-boot-maven-plugin</artifactId>
+	    		</plugin>
+	    
+	        <plugin>
+	            <groupId>com.spotify</groupId>
+	            <artifactId>dockerfile-maven-plugin</artifactId>
+	            <version>1.3.6</version>
+	            <configuration>
+	                <repository>${docker.image.prefix}/${project.artifactId}</repository>
+						<buildArgs>
+							<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+						</buildArgs>
+	            </configuration>
+	        </plugin>
+	        
+		    <plugin>
+		      <!-- Build an executable JAR -->
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-jar-plugin</artifactId>
+		      <version>3.0.2</version>
+		      <configuration>
+		        <archive>
+		          <manifest>
+		            <addClasspath>true</addClasspath>
+		            <mainClass>io.fjstarter.helloworld.FJsAPIApp</mainClass>        	            
+		          </manifest>
+		        </archive>
+		      </configuration>
+		    </plugin>
+	       
+	    </plugins>
+	</build>
 
-   
+
 </project>
